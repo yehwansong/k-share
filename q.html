@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" href="common.css">
+<meta charset="utf-8">
+<meta 
+     name='viewport' 
+     content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
+/>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript">
+        // output : none
+        // input : b, c, a
+
+    // input
+    if(a){
+        $('#img').css({'opacity':0})
+    }else{
+        $('#img').css({'opacity':1})
+    }
+
+    
+        var value = 100
+
+        setInterval(function(){
+            if(typeof b !== 'undefined'  &&  typeof c !== 'undefined') {
+                if(b2>0||c2>0){
+                    if(b2>c2){
+                        value = b2
+                    }else{
+                        value = c2
+                    }
+                }
+            }else{
+                value = 100
+            }
+        }, 100);
+        var counter = 0
+        setInterval(function(){
+                counter++
+                console.log($('.img_'+counter%9))
+                $('.img').css({'opacity':0})
+                $('.img_'+counter%9).css({'opacity':1})
+        }, value);
+
+    </script>
+<style>
+    .img{position: absolute;
+        width: 100vw;
+        left: 0;
+        top: 0
+    }
+</style>
+</head>
+<body>
+    <div>
+        <img class="img img_0" src="frame/img-01.png">
+        <img class="img img_1" src="frame/img-02.png">
+        <img class="img img_2" src="frame/img-03.png">
+        <img class="img img_3" src="frame/img-04.png">
+        <img class="img img_4" src="frame/img-05.png">
+        <img class="img img_5" src="frame/img-06.png">
+        <img class="img img_6" src="frame/img-07.png">
+        <img class="img img_7" src="frame/img-08.png">
+        <img class="img img_8" src="frame/img-09.png">
+    </div>
+</body>

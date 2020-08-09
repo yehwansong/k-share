@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" href="common.css">
+<meta charset="utf-8">
+<meta 
+     name='viewport' 
+     content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
+/>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript">
+//output: e
+//input : a , d
+
+
+
+// input
+    if(a){
+        $('.elem').css({'opacity':0})
+    }else{
+        $('.elem').css({'opacity':1})
+    }
+
+
+
+
+    function map_range(value, low1, high1, low2, high2) {
+        return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+    }
+    $(document).ready(function(){
+        var vids = $("video"); 
+    $.each(vids, function(){
+           this.controls = false; 
+    }); 
+        var average = 0
+        var bound = 30
+        var min = 0
+        var max = 50
+            if(navigator && navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+                navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(function(stream){
+                    console.log('111111')
+                    var AudioContext = window.AudioContext // Default
+                        || window.webkitAudioContext // Safari and old versions of Chrome
+                        || false; 
+
+                    if (AudioContext) {
+                        var ctx = new AudioContext;
+                        // ...
+                    } else {
+                        alert("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox");
+                    }
+                    audioContext = new AudioContext();
+                    analyser = audioContext.createAnalyser();
+                    microphone = audioContext.createMediaStreamSource(stream);
+                    javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+                    analyser.smoothingTimeConstant = 0.8;
+                    analyser.fftSize = 1024;
+
+                    microphone.connect(analyser);
+                    analyser.connect(javascriptNode);
+                    javascriptNode.connect(audioContext.destination);
+                    javascriptNode.onaudioprocess = function() {
+                      var array = new Uint8Array(analyser.frequencyBinCount);
+                      analyser.getByteFrequencyData(array);
+                      var values = 0;
+
+                      var length = array.length;
+                      for (var i = 0; i < length; i++) {
+                        values += (array[i]);
+                      }
+
+                      average = values / length;
+                      // average = 80
+
+                   
+                    console.log(Math.round(average));
+                    e = Math.round(average) > 30
+                    // t or f
+                    // only works on https
+                    }
+                })
+                .catch(function(err) {
+                });
+            }
+    })
+    </script>
+<style>
+</style>
+</head>
+<body>
+    <div></div>
+</body>
