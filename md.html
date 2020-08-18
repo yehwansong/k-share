@@ -1,111 +1,119 @@
 <!DOCTYPE html>
+
 <head>
-<link rel="stylesheet" href="common.css">
-<meta charset="utf-8">
-<meta 
-     name='viewport' 
-     content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
-/>
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.js"
-    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-    crossorigin="anonymous"></script>
-    <script type="text/javascript">
-//output: d1, d2
-//input : a , e
+  <link rel="stylesheet" href="common.css">
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="firebase-load.js"></script>
+  <script type="text/javascript">
+  //output: d1, d2
+  //input : a , e
 
 
-// input
-    if(a){
-        $('.elem').css({'opacity':0})
-    }else{
-        $('.elem').css({'opacity':1})
+  // output
+  var canvas, ctx;
+  var mouseX, mouseY, mouseDown = 0;
+  var touchX, touchY;
+
+  function drawDot(ctx, x, y, size) {
+    r = 0;
+    g = 0;
+    b = 0;
+    a = 255;
+    ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + (a / 255) + ")";
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function clearCanvas(canvas, ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function getMousePos(e) {
+    if (!e)
+      var e = event;
+
+    if (e.offsetX) {
+      mouseX = e.offsetX;
+      mouseY = e.offsetY;
+    } else if (e.layerX) {
+      mouseX = e.layerX;
+      mouseY = e.layerY;
+    }
+  }
+
+  function sketchpad_touchStart() {
+    getTouchPos();
+    drawDot(ctx, touchX, touchY, 12);
+    event.preventDefault();
+  }
+
+  function sketchpad_touchMove(e) {
+    getTouchPos(e);
+
+    drawDot(ctx, touchX, touchY, 12);
+
+    event.preventDefault();
+  }
+
+  function getTouchPos(e) {
+    if (!e)
+      var e = event;
+
+    if (e.touches) {
+      if (e.touches.length == 1) { // Only deal with one finger
+        var touch = e.touches[0]; // Get the information for finger #1
+        touchX = touch.pageX - touch.target.offsetLeft;
+        touchY = touch.pageY - touch.target.offsetTop;
+
+        setFirebaseValues({
+          d1: touchX,
+          d2: touchY
+        });
+      }
+    }
+  }
+
+
+  function onFirebaseReady() {
+    console.log('onFirebaseReady handler');
+
+    canvas = document.getElementById('sketchpad');
+
+    if (canvas.getContext) {
+      ctx = canvas.getContext('2d');
+    }
+    if (ctx) {
+      canvas.addEventListener('touchstart', sketchpad_touchStart, false);
+      canvas.addEventListener('touchmove', sketchpad_touchMove, false);
+    }
+  }
+
+  function firebaseValueChangeHandler(values) {
+    console.log('firebaseValueChangeHandler')
+
+    // input
+    if (values.a) {
+      // FIXME .elem does not exist
+      $('.elem').css({ 'opacity': 0 })
+    } else {
+      $('.elem').css({ 'opacity': 1 })
     }
 
-    if(e){
-        $('body').css({'background-color':'black'})
-    }else{
-        $('body').css({'background-color':'white'})
+    if (values.e) {
+      $('body').css({ 'background-color': 'black' })
+    } else {
+      $('body').css({ 'background-color': 'white' })
     }
+  }
 
 
-
-// output
-    var d1
-    var d2
-    var canvas,ctx;
-    var mouseX,mouseY,mouseDown=0;
-    var touchX,touchY;
-    function drawDot(ctx,x,y,size) {
-        r=0; g=0; b=0; a=255;
-        ctx.fillStyle = "rgba("+r+","+g+","+b+","+(a/255)+")";
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI*2, true); 
-        ctx.closePath();
-        ctx.fill();
-    } 
-
-    function clearCanvas(canvas,ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function getMousePos(e) {
-        if (!e)
-            var e = event;
-
-        if (e.offsetX) {
-            mouseX = e.offsetX;
-            mouseY = e.offsetY;
-        }
-        else if (e.layerX) {
-            mouseX = e.layerX;
-            mouseY = e.layerY;
-        }
-     }
-
-    function sketchpad_touchStart() {
-        getTouchPos();
-        drawDot(ctx,touchX,touchY,12);
-        event.preventDefault();
-    }
-    function sketchpad_touchMove(e) { 
-        getTouchPos(e);
-
-        drawDot(ctx,touchX,touchY,12); 
-
-        event.preventDefault();
-    }
-
-    function getTouchPos(e) {
-        if (!e)
-            var e = event;
-
-        if(e.touches) {
-            if (e.touches.length == 1) { // Only deal with one finger
-                var touch = e.touches[0]; // Get the information for finger #1
-                touchX=touch.pageX-touch.target.offsetLeft;
-                touchY=touch.pageY-touch.target.offsetTop;1
-                d1=touchX
-                d2=touchY
-            }
-        }
-    }
-
-
-    function init() {
-        canvas = document.getElementById('sketchpad');
-
-        if (canvas.getContext)
-            ctx = canvas.getContext('2d');
-        if (ctx) {
-            canvas.addEventListener('touchstart', sketchpad_touchStart, false);
-            canvas.addEventListener('touchmove', sketchpad_touchMove, false);
-        }
-    }
-</script>
-
-<style>
-/* Some CSS styling */
+  </script>
+  <style>
+    /* Some CSS styling */
 #sketchpadapp {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -144,15 +152,16 @@
 </style>
 </head>
 
-<body onload="init()">
-    <div id="sketchpadapp">
-        <div class="leftside">
-             <input type="submit" value="Clear Sketchpad" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
-        </div>
-        <div class="rightside">
-            <canvas id="sketchpad" height="300" width="400">
-            </canvas>
-        </div>
+<body>
+  <div id="sketchpadapp">
+    <div class="leftside">
+      <input type="submit" value="Clear Sketchpad" id="clearbutton" onclick="clearCanvas(canvas,ctx);">
     </div>
+    <div class="rightside">
+      <canvas id="sketchpad" height="300" width="400">
+      </canvas>
+    </div>
+  </div>
 </body>
+
 </html>

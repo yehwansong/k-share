@@ -1,40 +1,39 @@
 <!DOCTYPE html>
+
 <head>
-<link rel="stylesheet" href="common.css">
-<meta charset="utf-8">
-<meta 
-     name='viewport' 
-     content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
-/>
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.js"
-    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-    crossorigin="anonymous"></script>
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript">
-        // sun
-        // output : a
-        // input : none
-        var a = false
-        $(document).ready(function(){
-            $('.sun').on('touchstart', function(e) {
-                a = true
-                console.log(a)
-            })
-            $('.sun').on('touchend', function(e) {
-                a = false
-            })
-        })
-    </script>
-<style>
-    .sun{position: absolute;
-        width: 100vw;
-        height: 100vw;
-        background: red;
-        border-radius: 50%;
-    }
-</style>
+  <link rel="stylesheet" href="common.css">
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="firebase-load.js"></script>
+  <script type="text/javascript">
+  // sun
+  // output : a
+  // input : none
+  setFirebaseValues({ a: false });
+
+  function onFirebaseReady() {
+    console.log('onFirebaseReady handler');
+
+    $('.sun').on('touchstart', function(e) {
+      setFirebaseValues({ a: true });
+    })
+    $('.sun').on('touchend', function(e) {
+      setFirebaseValues({ a: false });
+    })
+  }
+  </script>
+  <style>
+  .sun {
+    position: absolute;
+    width: 100vw;
+    height: 100vw;
+    background: red;
+    border-radius: 50%;
+  }
+  </style>
 </head>
+
 <body>
-    <div class="sun"></div>
+  <div class="sun"></div>
 </body>

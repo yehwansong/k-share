@@ -1,53 +1,78 @@
 <!DOCTYPE html>
+
 <head>
-<link rel="stylesheet" href="common.css">
-<meta charset="utf-8">
-<meta 
-     name='viewport' 
-     content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
-/>
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.js"
-    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-    crossorigin="anonymous"></script>
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript">
-        // sun
-        // output : none
-        // input : e, a
-        
+  <link rel="stylesheet" href="common.css">
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="firebase-load.js"></script>
+  <script type="text/javascript">
+  // sun
+  // output : none
+  // input : e, a
+
+  var firebaseValues = {}
+
+  function onFirebaseReady() {
+    console.log('onFirebaseReady handler');
+
+    var counter = 0
+    setInterval(function() {
+      if (firebaseValues.e) {
+        counter++
+        console.log(counter)
+        $('.video').hide()
+        $('.video_' + counter % 5).show()
+      }
+    }, 500);
+  }
+
+  function firebaseValueChangeHandler(values) {
+    console.log('firebaseValueChangeHandler')
+
     // input
-    if(a){
-        $('#img').css({'opacity':0})
-    }else{
-        $('#img').css({'opacity':1})
+    if (values.a) {
+      // FIXME there is no #img in this page
+      $('body').css({ 'opacity': 0 })
+    } else {
+      $('body').css({ 'opacity': 1 })
     }
 
-
-
-        var counter = 0
-        setInterval(function(){
-            if(e){
-                counter++
-                console.log(counter)
-                $('.video').hide()
-                $('.video_'+counter%5).show()
-            }
-        }, 100);
-    </script>
-<style>
-    .sun{position: absolute;
-        width: 100vw;
-        height: 100vw;
-        background: red;
-        border-radius: 50%;
-    }
-</style>
+    firebaseValues.e = values.e
+  }
+  </script>
+  <style>
+  .sun {
+    position: absolute;
+    width: 100vw;
+    height: 100vw;
+    background: red;
+    border-radius: 50%;
+  }
+  video{
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+  }
+  </style>
 </head>
+
 <body>
-    <video class="video video_0"></video>
-    <video class="video video_1"></video>
-    <video class="video video_2"></video>
-    <video class="video video_3"></video>
-    <video class="video video_4"></video>
+  <!-- FIXME set video src -->
+  <video autoplay loop muted  class="video video_0">
+    <source src="videos/vid5.mp4" type="video/mp4" />
+  </video>
+  <video autoplay loop muted  class="video video_1">
+    <source src="videos/vid2.mp4" type="video/mp4" />
+  </video>
+  <video autoplay loop muted  class="video video_2">
+    <source src="videos/vid3.mp4" type="video/mp4" />
+  </video>
+  <video autoplay loop muted  class="video video_3">
+    <source src="videos/vid4.mp4" type="video/mp4" />
+  </video>
+  <video autoplay loop muted  class="video video_4">
+    <source src="videos/vid1.mp4" type="video/mp4" />
+  </video>
 </body>
