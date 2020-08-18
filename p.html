@@ -11,35 +11,6 @@
   // output : none
   // input : e, a
 
-  var firebaseValues = {}
-
-  function onFirebaseReady() {
-    console.log('onFirebaseReady handler');
-
-    var counter = 0
-    setInterval(function() {
-      if (firebaseValues.e) {
-        counter++
-        console.log(counter)
-        $('.video').hide()
-        $('.video_' + counter % 5).show()
-      }
-    }, 500);
-  }
-
-  function firebaseValueChangeHandler(values) {
-    console.log('firebaseValueChangeHandler')
-
-    // input
-    if (values.a) {
-      // FIXME there is no #img in this page
-      $('body').css({ 'opacity': 0 })
-    } else {
-      $('body').css({ 'opacity': 1 })
-    }
-
-    firebaseValues.e = values.e
-  }
   </script>
   <style>
   .sun {
